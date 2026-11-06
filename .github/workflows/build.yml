@@ -88,13 +88,8 @@ jobs:
       - name: Checksums
         run: |
           cd build/app/outputs
-          {
-            echo '### SHA-256 checksums'
-            echo '```'
-            sha256sum flutter-apk/app-release.apk bundle/release/app-release.aab
-            echo '```'
-          > "$GITHUB_STEP_SUMMARY" || true
-          sha256sum flutter-apk/app-release.apk bundle/release/app-release.aab > checksums.txt
+          sha256sum flutter-apk/app-release.apk bundle/release/app-release.aab | tee checksums.txt
+          printf '### SHA-256 checksums\n```\n%s```\n' "$(cat checksums.txt)" >> "$GITHUB_STEP_SUMMARY" || true
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
