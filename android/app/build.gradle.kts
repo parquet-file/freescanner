@@ -78,6 +78,12 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            // Extra R8 rules: ML Kit optional scripts are intentionally not
+            // bundled; tesseract4android JNI bridge must survive shrinking.
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
