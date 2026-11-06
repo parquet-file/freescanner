@@ -78,8 +78,22 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            // Extra R8 rules: ML Kit optional scripts are intentionally not
-            // bundled; tesseract4android JNI bridge must survive shrinking.
+            // R8 shrinking is OFF.
+            //
+            // Flutter >= 3.47 turns minify + shrinkResources ON for release
+            // builds by default (FlutterPlugin.kt -> shouldShrinkResources(),
+            // property "shrink", default true). The shrunk v1.0.0 release
+            // build crashed instantly at launch on device while debug worked:
+            // R8 stripped/obfuscated plugin classes needed at engine init
+            // (known Flutter regression flutter/flutter#154580). "shrink=false"
+            // in gradle.properties is the primary opt-out; the explicit flags
+            // below keep it off even if that property is removed.
+            isMinifyEnabled = false
+            isShrinkResources = false
+            // Rules below only take effect when shrinking is deliberately
+            // re-enabled (remove the opt-out + the flags above). ML Kit
+            // optional scripts are intentionally not bundled; the
+            // tesseract4android JNI bridge must survive shrinking.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

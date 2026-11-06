@@ -73,6 +73,41 @@ Release** with both binaries attached and their SHA-256 checksums:
 git tag v1.0.0 && git push origin v1.0.0
 ```
 
+### Troubleshooting: release APK crashes right after the splash screen
+
+**Symptom** (seen with v1.0.0): the app works in debug (`flutter run`) but a
+release install dies instantly after the splash screen — logcat shows
+`AndroidRuntime: Process: com.muktibeg.freescanner, PID …` followed by
+`ActivityManager: crash`.
+
+**Cause:** Flutter ≥ 3.47 enables **R8 minification + resource shrinking on
+release builds by default** (`FlutterPlugin.kt → shouldShrinkResources()`,
+Gradle property `shrink`, default `true`). The shrunk build had plugin
+classes stripped/renamed in a way that broke engine start-up — a known
+Flutter regression class (flutter/flutter#154580, "R8 incorrectly stripping
+plugin classes"). Debug builds never shrink, which is why debug worked.
+
+**Fix (already applied in this repo):**
+
+* `android/gradle.properties` → `shrink=false` (the official opt-out),
+* `android/app/build.gradle.kts` → `isMinifyEnabled = false` and
+  `isShrinkResources = false` in the `release` build type,
+* `android/app/proguard-rules.pro` keeps complete keep-rules for the day
+  shrinking is deliberately re-enabled (then remove both opt-outs and
+  **test a release install on a real device**).
+
+**Capturing the real stack trace** (the crash buffer beats filtering by
+package name — `findstr com.muktibeg.freescanner` drops the actual
+`FATAL EXCEPTION` block because the frames don't contain the package name):
+
+```bash
+adb logcat -c                      # clear the log
+adb shell am start -n com.muktibeg.freescanner/.MainActivity
+adb logcat -b crash -d             # dump ONLY the crash buffer, full trace
+# or, live:      adb logcat AndroidRuntime:E *:S
+# or, full log:  adb logcat > full.log   then search for "FATAL EXCEPTION"
+```
+
 ### Release signing in CI
 
 Without secrets the builds are **debug-signed** (installable for testing, not
