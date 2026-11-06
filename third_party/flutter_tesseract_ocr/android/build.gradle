@@ -1,0 +1,44 @@
+group 'io.paratoner.flutter_tesseract_ocr'
+version '1.0'
+
+// ---------------------------------------------------------------------------
+// VENDORED PATCH — FreeScanner (2026-11-06), upstream 0.4.31.
+//
+// Upstream's buildscript block declared:
+//     repositories { google(); jcenter() }          // jcenter(): gone in Gradle 9
+//     dependencies { classpath 'com.android.tools.build:gradle:7.1.2' }
+//
+// Both break a Gradle 9 / AGP 9 build:
+//   * jcenter() was removed from RepositoryHandler in Gradle 9.
+//   * A plugin-pinned AGP 7.1.2 is incompatible with Gradle 9 and unnecessary
+//     anyway: the app's settings.gradle.kts puts AGP on the classpath of
+//     every project (the standard Flutter plugins-DSL setup), so this module
+//     needs no buildscript at all.
+//
+// Everything else matches upstream (flatDir AAR dependency on the bundled
+// tesseract4android, namespace, minSdk 21 — raised to compileSdk 36).
+// ---------------------------------------------------------------------------
+
+rootProject.allprojects {
+    repositories {
+        flatDir {
+           dirs project(':flutter_tesseract_ocr').file('libs')
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace "io.paratoner.flutter_tesseract_ocr"
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 21
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    api(name: 'tesseract4android-release', ext: 'aar')
+}

@@ -54,6 +54,13 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
 
+dependency_overrides:
+  # Vendored upstream (jcenter()/AGP-7.1.2 buildscript breaks Gradle 9 —
+  # see third_party/flutter_tesseract_ocr/android/build.gradle). Dart/Java
+  # code identical to pub.dev 0.4.31; revert by deleting this override.
+  flutter_tesseract_ocr:
+    path: third_party/flutter_tesseract_ocr
+
 flutter:
   uses-material-design: true
 

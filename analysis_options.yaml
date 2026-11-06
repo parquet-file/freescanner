@@ -4,6 +4,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - build/**
+    # Vendored third-party code keeps its upstream style.
+    - third_party/**
     - android/**
 
 linter:
