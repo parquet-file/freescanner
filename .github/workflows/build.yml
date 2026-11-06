@@ -116,16 +116,23 @@ jobs:
         run: |
           cd build/app/outputs
           {
-            echo "FreeScanner ${TAG}"
+            echo "FreeScanner ${TAG} — on-device document scanner & OCR"
             echo
             echo "**Artifacts**"
-            echo "- \`FreeScanner-${TAG}.apk\` — install directly on any Android 7.0+ device"
-            echo "- \`app-release.aab\` — upload to Google Play Console"
+            echo "- \`FreeScanner-${TAG}.apk\` — install directly on any Android 7.0+ (API 24) device"
+            echo "- \`FreeScanner-${TAG}.aab\` — upload to Google Play Console"
+            echo
+            echo "**Highlights**"
+            echo "- ML Kit document scanner: edge detection, cropping, perspective correction — 100% on-device"
+            echo "- Magic filters (Magic Color / B&W / Lighten / Sharp Color) + rotation"
+            echo "- Offline OCR: English (ML Kit) + Bengali (Tesseract, beta)"
+            echo "- Multi-page PDF export, local-first storage, share sheet"
+            echo "- Remote-controlled AdMob — OFF by default, toggled by the gameserver isAdEnabled switch"
             echo
             if [ "${{ steps.keystore.outputs.present }}" = "true" ]; then
               echo "Signed with the configured upload keystore."
             else
-              echo "> ⚠️ Debug-signed build (no signing secrets configured). Install for testing only — configure the ANDROID_KEYSTORE_* secrets before a Play Store upload."
+              echo "> ⚠️ Debug-signed build (no signing secrets configured). Install for testing only — configure the ANDROID_KEYSTORE_* secrets (see README) before a Play Store upload."
             fi
             echo
             echo '**SHA-256**'
