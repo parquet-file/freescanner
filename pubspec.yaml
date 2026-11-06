@@ -1,0 +1,62 @@
+name: freescanner
+description: >-
+  FreeScanner — a 100% free, on-device document scanner and OCR app.
+  Scan documents with automatic edge detection, apply magic filters,
+  extract text offline (English via ML Kit, Bengali via Tesseract) and
+  export multi-page PDFs. No cloud processing: everything happens on
+  the device.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.38.1"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management (MVVM)
+  provider: ^6.1.5
+
+  # Document scanning (ML Kit — automatic edge detection, cropping,
+  # perspective correction, filters) — fully on-device.
+  google_mlkit_document_scanner: ^0.7.0
+
+  # English OCR (ML Kit text recognition — offline, Latin script).
+  google_mlkit_text_recognition: ^1.0.0
+
+  # Bengali OCR (Tesseract with bundled ben/eng traineddata).
+  flutter_tesseract_ocr: ^0.4.31
+
+  # Monetization (gated behind the backend isAdEnabled switch).
+  google_mobile_ads: ^9.2.0
+
+  # Local storage & export
+  path_provider: ^2.1.6
+  path: ^1.9.0
+  shared_preferences: ^2.5.6
+  pdf: ^3.13.1
+  share_plus: ^13.3.1
+
+  # Image processing for the "magic filters"
+  image: ^4.12.0
+
+  # Backend communication (remote ad config + Google auth sync)
+  http: ^1.6.0
+  google_sign_in: ^7.2.0
+
+  # Open the privacy policy / support mail links
+  url_launcher: ^6.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/tessdata/
+    - assets/tessdata_config.json

@@ -1,0 +1,14 @@
+# Flutter analyze rules (flutter_lints 6).
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+
+linter:
+  rules:
+    # Production-grade extras on top of the flutter_lints set.
+    prefer_single_quotes: true
+    unawaited_futures: true
+    avoid_redundant_argument_values: false
